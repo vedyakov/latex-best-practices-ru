@@ -1,0 +1,130 @@
+% !TeX encoding = UTF-8
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english, russian]{babel}
+
+% for indent first paragraph within section
+\usepackage{indentfirst}
+
+%for text boundaries
+\usepackage[a4paper, left=15mm, right=15mm, top=15mm, bottom=15mm]{geometry}
+
+%for some mathematical things
+\usepackage{amsmath}
+
+\usepackage{listings}
+
+\usepackage{tgpagella}
+\usepackage{dtk-logos}
+
+\usepackage[example]{cnltx}
+\lstdefinestyle{mystyle}{
+	language   = [AlLaTeX]TeX,
+	basicstyle = {\ttfamily\small},
+	columns    = fullflexible,
+	texcsstyle = \color{blue},
+	showstringspaces=false,
+	basicstyle={\ttfamily},
+	commentstyle={\it},
+	tabsize=2
+}
+\setcnltx{
+	listings-options = {
+		style = mystyle
+	}, 
+	frame-options = ,
+	code-sep = \dotfill
+}
+
+\title{{\LaTeXe} Best Practices}
+\author{Алексей Ведяков}
+\date{2020}
+
+\begin{document}
+
+\maketitle
+ 
+Ниже изложены основные практики, которые настоятельно рекомендуются к
+применению, а в некоторых случаях являются обязательными. Их применение
+обусловлено основами типографики, традициями сложившимися в русской и
+англоязычной академической среде, здравым смыслом, опытом работы в TeX, в том числе совместной, и, конечно, в некоторой степени субъективными причинами.
+
+\section{Оформление формул}
+
+\subsection{Окружение}
+
+Все блочные формулы только в окружении \texttt{align}. Без
+\texttt{aligned}, \texttt{equation}, \texttt{\$\$\ldots\$\$} и так далее, и уже
+тем более без вложенного \texttt{aligned} в \texttt{align}.
+
+\textbf{Причина:} \texttt{align} --~самое мощное окружение, другие нет
+причин использовать, а унификация помогает сделать оформление формул в
+документе единообразным, уменьшить проблемы при совместной работе.
+
+\subsection{Нумерация формул}
+
+\begin{enumerate}
+	\item Для выравнивания многострочных формул используется \& (амперсанд)
+	\begin{enumerate}
+		\item Знак ставится до математического знака, иначе оно <<прилипает>> к стоящему справа выражению:
+		
+		\begin{minipage}{\linewidth}
+\begin{example}[side-by-side]
+	\begin{align}
+		y(t) = & ax(t) + b. % wrong
+	\end{align}
+\end{example}%
+\vspace{-3em}%
+\begin{example}[side-by-side]
+	\begin{align}
+		y(t) & = ax(t) + b.
+	\end{align}
+\end{example}
+		\end{minipage}
+		
+		\item Формулы выравниваются по знаку равно:
+		
+		\begin{minipage}{\linewidth}
+\begin{example}[side-by-side]
+	\begin{align}
+		y(t) & = a_1 x(t) + b_1,
+		\\
+		z(t) & = a_2 x(t) + b_2.
+	\end{align}
+\end{example}
+		\end{minipage}	
+	\end{enumerate}
+	\item Все формулы и строки в формулах нумерованные, вручную нумерация убирается только с помощью команды \nonumber для строк, которые являются промежуточными в вычислениях. Например, 
+\begin{example}[side-by-side]
+\begin{align}
+	\cos 2a & = \cos a - \sin a \nonumber \\
+		& = 2\cos a - 1
+\end{align}
+\end{example}
+	В таком случае нумеруется только последняя строчка.
+
+\end{enumerate}
+
+%\item
+%Команды принудительного перехода на новую страницы \newpage,
+%\clearpage и др. не используются. Совсем и никогда.
+%\item
+%Команды принудительного переноса строки \textbackslash, \newline и др.
+%используются только в заголовках, коло
+%
+%Кавычки
+%
+%«»
+%
+%сsquotes
+%
+%\texttt{\textasciitilde{}-\/-\/-}
+%
+%\eqref
+%
+%is/are vs \texttt{\textasciitilde{}-\/-\/-}
+%
+%\texttt{\textbackslash{}quad} в формулах
+%\cdots vs \ldots
+% graphics vs graphixs
+\end{document}
