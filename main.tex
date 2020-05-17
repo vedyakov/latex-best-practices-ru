@@ -12,14 +12,19 @@
 %for some mathematical things
 \usepackage{amsmath}
 
-\usepackage{listings}
+\usepackage[listings]{tcolorbox}
 
-\usepackage{tgpagella}
-\usepackage{dtk-logos}
+\lstdefinestyle{mystyle}{language=[LaTeX]TeX,
+	basicstyle=\ttfamily,
+	texcsstyle=*\color{blue},
+	breaklines=true,
+%	keywordstyle=\color{green!30!black},
+%	commentstyle=\color{red},
+	tabsize=2,
+	gobble=auto
+}
 
-\usepackage{showexpl}
-
-\title{{\LaTeXe} Best Practices}
+\title{{\LaTeX} Best Practices}
 \author{Алексей Ведяков}
 \date{2020}
 
@@ -78,12 +83,18 @@
 %		\end{minipage}	
 %	\end{enumerate}
 %	\item Все формулы и строки в формулах нумерованные, вручную нумерация убирается только с помощью команды \nonumber для строк, которые являются промежуточными в вычислениях. Например, 
-\begin{LTXexample}
+%\begin{LTXexample}
+%	\begin{align}
+%	\cos 2a & = \cos a - \sin a \nonumber \\
+%		& = 2\cos a - 1
+%\end{align}
+%\end{LTXexample}
+\begin{tcblisting}{listing options={style=mystyle}, sidebyside, colframe=white, colback=white, before lower={\vspace{-2em}}}
 	\begin{align}
-	\cos 2a & = \cos a - \sin a \nonumber \\
-		& = 2\cos a - 1
-\end{align}
-\end{LTXexample}
+		\cos 2a & = \cos a - \sin a \nonumber \\
+			& = 2\cos a - 1
+	\end{align}
+\end{tcblisting}
 %	В таком случае нумеруется только последняя строчка.
 %
 %\end{enumerate}
