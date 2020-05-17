@@ -12,16 +12,40 @@
 %for some mathematical things
 \usepackage{amsmath}
 
-\usepackage[listings]{tcolorbox}
+\PassOptionsToPackage{usenames,dvipsnames}{xcolor}
+\usepackage[listings,most]{tcolorbox}
 
 \lstdefinestyle{mystyle}{language=[LaTeX]TeX,
-	basicstyle=\ttfamily,
-	texcsstyle=*\color{blue},
+	basicstyle=\ttfamily\small,
+	texcsstyle=*\color{BlueViolet},
 	breaklines=true,
-%	keywordstyle=\color{green!30!black},
-%	commentstyle=\color{red},
-	tabsize=2,
-	gobble=auto
+	columns=fullflexible,
+	tabsize=2
+}
+\newtcblisting{example}{
+	width=\linewidth, sharp corners,
+	sidebyside,%
+	lower separated=true,
+	listing options={style=mystyle},
+	colframe=PineGreen,
+	colback=white,
+	before lower={\vspace{-2em}}
+}
+\newtcblisting{wrongexample}{
+	width=\linewidth, sharp corners,
+	sidebyside,%
+	lower separated=true,
+	listing options={style=mystyle},
+	colframe=Mahogany,
+	colback=white,
+	before lower={\vspace{-2em}}
+}
+\newtcblisting{listingonly}{
+	width=\linewidth, sharp corners,
+	listing only,%
+	listing options={style=mystyle},
+	colframe=Mahogany,
+	colback=white
 }
 
 \title{{\LaTeX} Best Practices}
@@ -51,54 +75,82 @@
 
 \subsection{Нумерация формул}
 
-%\begin{enumerate}
-%	\item Для выравнивания многострочных формул используется \& (амперсанд)
-%	\begin{enumerate}
-%		\item Знак ставится до математического знака, иначе оно <<прилипает>> к стоящему справа выражению:
-%		
-%		\begin{minipage}{\linewidth}
-%\begin{example}[side-by-side]
-%	\begin{align}
-%		y(t) = & ax(t) + b. % wrong
-%	\end{align}
-%\end{example}%
-%\vspace{-3em}%
-%\begin{example}[side-by-side]
-%	\begin{align}
-%		y(t) & = ax(t) + b.
-%	\end{align}
-%\end{example}
-%		\end{minipage}
-%		
-%		\item Формулы выравниваются по знаку равно:
-%		
-%		\begin{minipage}{\linewidth}
-%\begin{example}[side-by-side]
-%	\begin{align}
-%		y(t) & = a_1 x(t) + b_1,
-%		\\
-%		z(t) & = a_2 x(t) + b_2.
-%	\end{align}
-%\end{example}
-%		\end{minipage}	
-%	\end{enumerate}
-%	\item Все формулы и строки в формулах нумерованные, вручную нумерация убирается только с помощью команды \nonumber для строк, которые являются промежуточными в вычислениях. Например, 
-%\begin{LTXexample}
-%	\begin{align}
-%	\cos 2a & = \cos a - \sin a \nonumber \\
-%		& = 2\cos a - 1
+% TODO блочные формулы
+\begin{enumerate}
+	\item Для выравнивания многострочных формул используется \& (амперсанд)
+	\begin{enumerate}
+		\item Знак ставится до математического знака, иначе оно <<прилипает>> к стоящему справа выражению:
+\begin{wrongexample}
+\begin{align}
+	y(t) = & a_1 x(t) + b_1.
+\end{align}
+\end{wrongexample}
+\begin{example}
+\begin{align}
+	y(t) & = a_1 x(t) + b_1.
+\end{align}
+\end{example}	
+
+		
+		\item Строки формул выравниваются по знаку равно:
+\begin{example}
+\begin{align}
+	y(t) & = a_1 x(t) + b_1,
+	\\
+	z(t) & = a_2 x(t) + b_2.
+\end{align}
+\end{example}
+\begin{example}
+\begin{align}
+	\cos 2a & = \cos a - \sin a
+		\nonumber \\
+		& = 2\cos a - 1
+\end{align}
+\end{example}
+			
+			\item Если последующая строка при переносе начинается не со знака равно, то её содержимое рекомендуется подвинуть правее с помощью команды \verb|\quad|:
+\begin{example}
+\begin{align}
+	\cos 2a & = \cos a -
+		\nonumber \\
+		& \quad - \sin a
+		\nonumber \\
+		& = 2\cos a - 1.
+\end{align}
+\end{example}
+			Так визуально проще отделять шаги вычислений друг от друга.
+	\end{enumerate}
+	\item Все отдельные математические выражения в блочных формулах нумеруются (автоматически). Вручную нумерация убирается (с помощью команды \verb|\nonumber|) только для строк, которые являются промежуточными в вычислениях, при этом нумерация последняя строка в вычислениях.
+\begin{example}
+\begin{align}
+	\cos 2a & = \cos a - \sin a
+		\nonumber \\
+		& = 2\cos a - 1.
+\end{align}
+\end{example}
+	Если требуется не нумеровать те формулы, на которые нет ссылок, то это делается автоматически:
+\begin{listingonly}
+	\usepackage{mathtools}
+	\mathtoolsset{showonlyrefs}
+\end{listingonly}
+	В 99\% случаев, это будет намного лучше, чем вручную нумеровать и не нумеровать формулы по неясной логике, расставляя везде \verb|\nonumber| или используя окружение \texttt{align}, что заставит страдать всех тех, кому все же понадобится сделать ссылку. Даже, если честно оставлять нумерованными только те формулы, на которые есть ссылка, то с течением времени это становится трудно поддерживать. Ссылки на формулы появляются позже и зачастую много позже в тексте, а значит сначала везде будет расставлено \verb|\nonumber|, которое надо будет убирать по мере написания текста. Кроме того, при удалении ссылок на формулы из текста, если делать вручную, то надо будет опять идти и расставлять \verb|\nonumber|. Используя же пакет, можно быть уверенным, что нумерованных формул без ссылок не останется. При совместной работе следить за правильной нумерацией еще сложнее. Можно расставлять везде \verb|\nonumber|, где нет \verb|\label|, но \verb|\label| могли просто забыть убрать при удалении ссылки на него из текста.
+\end{enumerate}
+
+%\item Перенос математического выражения осуществляется по математическому знаку.
+% TODO: $\times$
+% TODO повтор знака в русской традиции
+% TODO label после caption
+%\item Все формулы и строки в формулах нумерованные, вручную нумерация убирается только с помощью команды \nonumber для строк, которые являются промежуточными в вычислениях, а нумерация последняя строка.
+%\begin{example}
+%\begin{align}
+%\cos 2a & = \cos a - \sin a =
+%\nonumber \\
+%& = 2\cos a - 1.
 %\end{align}
-%\end{LTXexample}
-\begin{tcblisting}{listing options={style=mystyle}, sidebyside, colframe=white, colback=white, before lower={\vspace{-2em}}}
-	\begin{align}
-		\cos 2a & = \cos a - \sin a \nonumber \\
-			& = 2\cos a - 1
-	\end{align}
-\end{tcblisting}
-%	В таком случае нумеруется только последняя строчка.
-%
+%\end{example}
 %\end{enumerate}
 
+% Пунктуация в формулах
 %\item
 %Команды принудительного перехода на новую страницы \newpage,
 %\clearpage и др. не используются. Совсем и никогда.
@@ -121,4 +173,5 @@
 %\texttt{\textbackslash{}quad} в формулах
 %\cdots vs \ldots
 % graphics vs graphixs
+% Англоязычная традиция
 \end{document}
